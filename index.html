@@ -3,12 +3,12 @@
 <body>
     <script>
         function getUrlVars() {
-    var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-        vars[key] = value;
-    });
-    return vars;
-}
+            var vars = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+                vars[key] = value;
+            });
+            return vars;
+        }
         window.loadScripts = (scripts) => {
             return scripts.reduce((currentPromise, scriptUrl) => {
                 return currentPromise.then(() => {
@@ -24,18 +24,26 @@
         };
 
         let vars = getUrlVars();
-        setInterval(() => {
+        vars['code'] = vars['code'] || 'sh000001';
+        vars['time'] = vars['time'] || '1';
+        function refresh() {
+            setTimeout(() => {
 
-            var scripts = ["http://hq.sinajs.cn/list="+vars['code']];
+                var scripts = ["http://hq.sinajs.cn/list=" + vars['code']];
 
-            loadScripts(scripts).then(() => {
-                var data = window['hq_str_'+vars['code']].split(',');
-                document.title = (data[3]*1).toFixed(2) + ' ' + (((data[3] - data[2]) / data[2]) * 100).toFixed(2) + '%' +' '+ data[0]
-            });
-
-
-        }, 1000)
+                loadScripts(scripts).then(() => {
+                    var data = window['hq_str_' + vars['code']].split(',');
+                    document.title = (data[3] * 1).toFixed(2) + ' ' + (((data[3] - data[2]) / data[2]) * 100).toFixed(2) + '%' + ' ' + data[0]
+                    link.setAttribute('href',location.href);
+                    link.innerText=data[0];
+                });
+                refresh();
+            }, vars['time']);
+        }
+        refresh();
     </script>
+
+    <a id="link" target="_blank"></a>
 </body>
 
 </html>
