@@ -1,5 +1,140 @@
 <html>
 
+<head>
+    <script>
+        var nameMap = [
+            [
+                "0",
+                "股票名字；"
+            ],
+            [
+                "1",
+                "今日开盘价；"
+            ],
+            [
+                "2",
+                "昨日收盘价；"
+            ],
+            [
+                "3",
+                "当前价格；"
+            ],
+            [
+                "4",
+                "今日最高价；"
+            ],
+            [
+                "5",
+                "今日最低价；"
+            ],
+            [
+                "6",
+                "即“买一“报价；"
+            ],
+            [
+                "7",
+                "即“卖一“报价；"
+            ],
+            [
+                "8",
+                "成交数；"
+            ],
+            [
+                "9",
+                "成交额；"
+            ],
+            [
+                "10",
+                "“买一数；"
+            ],
+            [
+                "11",
+                "“买一价；"
+            ],
+            [
+                "12",
+                "“买二数；"
+            ],
+            [
+                "13",
+                "“买二价；"
+            ],
+            [
+                "14",
+                "“买三数；"
+            ],
+            [
+                "15",
+                "“买三价；"
+            ],
+            [
+                "16",
+                "“买四数；"
+            ],
+            [
+                "17",
+                "“买四价；"
+            ],
+            [
+                "18",
+                "“买五数；"
+            ],
+            [
+                "19",
+                "“买五价；"
+            ],
+            [
+                "20",
+                "卖一数"
+            ],
+            [
+                "21",
+                "卖一价"
+            ],
+            [
+                "22",
+                "卖二数"
+            ],
+            [
+                "23",
+                "卖二价"
+            ],
+            [
+                "24",
+                "卖三数"
+            ],
+            [
+                "25",
+                "卖三报价"
+            ],
+            [
+                "26",
+                "卖四数"
+            ],
+            [
+                "27",
+                "卖四报价"
+            ],
+            [
+                "28",
+                "卖五数"
+            ],
+            [
+                "29",
+                "卖五报价"
+            ],
+            [
+                "30",
+                "日期；"
+            ],
+            [
+                "31",
+                "时间；"
+            ], ["32", ""]
+        ];
+    </script>
+</head>
+
 <body>
     <script>
         function getUrlVars() {
@@ -25,17 +160,18 @@
 
         let vars = getUrlVars();
         vars['code'] = vars['code'] || 'sh000001';
-        vars['time'] = vars['time'] || '1';
+        vars['time'] = vars['time'] || '2';
         function refresh() {
             setTimeout(() => {
 
                 var scripts = ["http://hq.sinajs.cn/list=" + vars['code']];
 
                 loadScripts(scripts).then(() => {
-                    var data = window['hq_str_' + vars['code']].split(',');
+                    var data = window['hq_str_' + vars['code']].split(',').filter(x => x.trim());
                     document.title = (data[3] * 1).toFixed(2) + ' ' + (((data[3] - data[2]) / data[2]) * 100).toFixed(2) + '%' + ' ' + data[0]
-                    link.setAttribute('href',location.href);
-                    link.innerText=data[0];
+                    link.setAttribute('href', location.href);
+                    link.innerText = data[0];
+                    document.getElementById('detail').innerHTML = data.map((x, i) => i + nameMap[i][1] + ":" + x).join('<br />');
                 });
                 refresh();
             }, vars['time']);
@@ -44,6 +180,8 @@
     </script>
 
     <a id="link" target="_blank"></a>
+    <hr />
+    <div id="detail"></div>
 </body>
 
 </html>
