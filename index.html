@@ -134,49 +134,49 @@
         ];
 
         window.addEventListener('load', function () {
-  Notification.requestPermission(function (status) {
-    // This allows to use Notification.permission with Chrome/Safari
-    if (Notification.permission !== status) {
-      Notification.permission = status;
-    }
-  });
-}); 
+            Notification.requestPermission(function (status) {
+                // This allows to use Notification.permission with Chrome/Safari
+                if (Notification.permission !== status) {
+                    Notification.permission = status;
+                }
+            });
+        });
 
-function notifyMe(text) {
-  // Let's check if the browser supports notifications
-  if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-  }
+        function notifyMe(text) {
+            // Let's check if the browser supports notifications
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
 
-  // Let's check if the user is okay to get some notification
-  else if (Notification.permission === "granted") {
-    // If it's okay let's create a notification
-    var notification = new Notification(text);
-  }
+            // Let's check if the user is okay to get some notification
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification(text);
+            }
 
-  // Otherwise, we need to ask the user for permission
-  // Note, Chrome does not implement the permission static property
-  // So we have to check for NOT 'denied' instead of 'default'
-  else if (Notification.permission !== 'denied') {
-    Notification.requestPermission(function (permission) {
+            // Otherwise, we need to ask the user for permission
+            // Note, Chrome does not implement the permission static property
+            // So we have to check for NOT 'denied' instead of 'default'
+            else if (Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {
 
-      // Whatever the user answers, we make sure we store the information
-      if(!('permission' in Notification)) {
-        Notification.permission = permission;
-      }
+                    // Whatever the user answers, we make sure we store the information
+                    if (!('permission' in Notification)) {
+                        Notification.permission = permission;
+                    }
 
-      // If the user is okay, let's create a notification
-      if (permission === "granted") {
-        var notification = new Notification(text);
-      }
-    });
-  } else {
-    alert(`Permission is ${Notification.permission}`);
-  }
+                    // If the user is okay, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification(text);
+                    }
+                });
+            } else {
+                alert(`Permission is ${Notification.permission}`);
+            }
 
-  // At last, if the user already denied any notification, and you 
-  // want to be respectful there is no need to bother him any more.
-}
+            // At last, if the user already denied any notification, and you 
+            // want to be respectful there is no need to bother him any more.
+        }
     </script>
 </head>
 
@@ -206,7 +206,7 @@ function notifyMe(text) {
         let vars = getUrlVars();
         vars['code'] = vars['code'] || 'sh000001';
         vars['time'] = vars['time'] || '1000';
-        let lastPercent=0;
+        let lastPercent = 0;
         function refresh() {
             setTimeout(() => {
 
@@ -215,17 +215,17 @@ function notifyMe(text) {
                 loadScripts(scripts).then(() => {
                     var data = window['hq_str_' + vars['code']].split(',').filter(x => x.trim());
                     let percent = (((data[3] - data[2]) / data[2]) * 100).toFixed(2);
-                    
+
                     document.title = (data[3] * 1).toFixed(2) + ' ' + percent + '%' + ' ' + data[0]
                     link.setAttribute('href', location.href);
                     link.innerText = data[0];
                     document.getElementById('detail').innerHTML = data.map((x, i) => i + nameMap[i][1] + ":" + x).join('<br />');
-                        if(Math.abs(percent-lastPercent)>0.5){
-                         lastPercent=Math.floor(percent-lastPercent/0.5)*0.5;
-                         console.log('notify me');
-                         notifyMe(percent);
+                    if (Math.abs(percent - lastPercent) > 0.5) {
+                        lastPercent = Math.floor(percent - lastPercent / 0.5) * 0.5;
+                        console.log('notify me');
+                        notifyMe(percent);
                     }
- 
+
 
                 });
                 refresh();
